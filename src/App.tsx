@@ -1,11 +1,11 @@
 import React from "react";
-import Button from "@mui/material/Button";
+import Recorder from "./components/Recorder";
 
 function App() {
   return (
     <div className="App">
-      hi
-      <Button variant="contained">Hello World</Button>
+      hiee
+      <Recorder />
     </div>
   );
 }
