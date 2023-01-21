@@ -1,6 +1,14 @@
 import { useEffect, useState } from "react";
 
+export const enum RecordingStatus {
+  NOT_INITIALIZED,
+  READY,
+  RECORDING,
+  RECORDED,
+}
+
 export default function useMediaRecorder(initOnCall = false) {
+  const [status, setStatus] = useState(RecordingStatus.NOT_INITIALIZED);
   const [mediaStream, setMediaStream] = useState<MediaStream>();
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder>();
   const [recordedBlob, setRecordedBlob] = useState<string>();
@@ -11,6 +19,7 @@ export default function useMediaRecorder(initOnCall = false) {
       video: true,
     });
     setMediaStream(mediaStream);
+    setStatus(RecordingStatus.READY);
 
     const mediaRecorder = new MediaRecorder(mediaStream, { mimeType: "video/webm" });
     setMediaRecorder(mediaRecorder);
@@ -33,6 +42,7 @@ export default function useMediaRecorder(initOnCall = false) {
     }
 
     mediaRecorder?.start();
+    setStatus(RecordingStatus.RECORDING);
   };
 
   const stopRecord = () => {
@@ -40,9 +50,11 @@ export default function useMediaRecorder(initOnCall = false) {
       throw new Error("stream not found");
     }
     mediaRecorder.stop();
+    setStatus(RecordingStatus.RECORDED);
   };
 
   return {
+    status,
     mediaStream,
     startRecord,
     stopRecord,
