@@ -8,6 +8,15 @@ interface VideoProps {
   onEnded?: () => void;
 }
 
+/**
+ * 녹화된 영상 재생 VIDEO
+ * @param src
+ * @param width
+ * @param height
+ * @param controls
+ * @param onEnded
+ * @constructor
+ */
 export default function RecordedVideo({ src, width, height, controls = false, onEnded }: VideoProps) {
   const ref = useRef<HTMLVideoElement>(null);
 

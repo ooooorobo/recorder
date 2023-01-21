@@ -8,6 +8,7 @@ import styled from "@emotion/styled";
 export default function ScreenTestStep() {
   const { status, mediaStream, startRecord, stopRecord, recordedBlob } = useMediaRecorder(true);
 
+  // TODO: status / showStream 따로 관리하지 않고 훅에서 받아온 값으로 유추하게 해보기
   const [showStream, setShowStream] = useState(true);
 
   useEffect(() => {

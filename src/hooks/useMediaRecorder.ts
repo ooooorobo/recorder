@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 
+// TODO: 따로 관리하지 않고 mediaRecorder.state 사용하는 것도 고려해보기
 export const enum RecordingStatus {
   NOT_INITIALIZED,
   READY,
