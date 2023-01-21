@@ -16,8 +16,6 @@ export default function ScreenTest() {
     }
   }, [status]);
 
-  useEffect(() => console.log(showStream), [showStream]);
-
   return (
     <>
       <VideoWrapper>

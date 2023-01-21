@@ -5,6 +5,7 @@ export const enum RecordingStatus {
   READY,
   RECORDING,
   RECORDED,
+  UNREGISTERED,
 }
 
 export default function useMediaRecorder(initOnCall = false) {
@@ -13,15 +14,25 @@ export default function useMediaRecorder(initOnCall = false) {
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder>();
   const [recordedBlob, setRecordedBlob] = useState<string>();
 
+  useEffect(() => {
+    if (initOnCall) {
+      initMediaStream();
+    }
+  }, []);
+
+  useEffect(() => {
+    return unregister;
+  }, [mediaStream]);
+
   const initMediaStream = async () => {
-    const mediaStream = await navigator.mediaDevices.getUserMedia({
+    const newMediaStream = await navigator.mediaDevices.getUserMedia({
       audio: true,
       video: true,
     });
-    setMediaStream(mediaStream);
+    setMediaStream(newMediaStream);
     setStatus(RecordingStatus.READY);
 
-    const mediaRecorder = new MediaRecorder(mediaStream, { mimeType: "video/webm" });
+    const mediaRecorder = new MediaRecorder(newMediaStream, { mimeType: "video/webm" });
     setMediaRecorder(mediaRecorder);
 
     mediaRecorder.ondataavailable = (e) => {
@@ -29,12 +40,6 @@ export default function useMediaRecorder(initOnCall = false) {
       setRecordedBlob(url);
     };
   };
-
-  useEffect(() => {
-    if (initOnCall) {
-      initMediaStream();
-    }
-  }, []);
 
   const startRecord = async () => {
     if (!mediaRecorder) {
@@ -53,11 +58,17 @@ export default function useMediaRecorder(initOnCall = false) {
     setStatus(RecordingStatus.RECORDED);
   };
 
+  const unregister = () => {
+    mediaStream?.getTracks().forEach((track) => track.stop());
+    setStatus(RecordingStatus.UNREGISTERED);
+  };
+
   return {
     status,
     mediaStream,
     startRecord,
     stopRecord,
     recordedBlob,
+    unregister,
   };
 }
