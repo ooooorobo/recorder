@@ -8,7 +8,7 @@ export const enum RecordingStatus {
   UNREGISTERED,
 }
 
-export default function useMediaRecorder(initOnCall = false) {
+export default function useMediaRecorder(initOnCall = false, onRecordedDataReady?: (src: string) => void) {
   const [status, setStatus] = useState(RecordingStatus.NOT_INITIALIZED);
   const [mediaStream, setMediaStream] = useState<MediaStream>();
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder>();
@@ -38,6 +38,7 @@ export default function useMediaRecorder(initOnCall = false) {
     mediaRecorder.ondataavailable = (e) => {
       const url = window.URL.createObjectURL(e.data);
       setRecordedBlob(url);
+      onRecordedDataReady?.(url);
     };
   };
 

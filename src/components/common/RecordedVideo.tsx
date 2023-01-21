@@ -12,10 +12,12 @@ export default function RecordedVideo({ src, width, height, controls = false, on
   const ref = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    ref.current?.load();
-    ref.current?.play();
-    if (onEnded) {
-      ref.current?.addEventListener("ended", onEnded);
+    if (src) {
+      ref.current?.load();
+      ref.current?.play();
+      if (onEnded) {
+        ref.current?.addEventListener("ended", onEnded);
+      }
     }
   }, [src]);
 

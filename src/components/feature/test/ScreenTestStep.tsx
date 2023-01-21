@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import StreamVideo from "../../common/StreamVideo";
 import styled from "@emotion/styled";
 
-export default function ScreenTest() {
+export default function ScreenTestStep() {
   const { status, mediaStream, startRecord, stopRecord, recordedBlob } = useMediaRecorder(true);
 
   const [showStream, setShowStream] = useState(true);
