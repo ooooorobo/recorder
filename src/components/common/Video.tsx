@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 
 interface VideoProps {
+  type: "RECORDED" | "STREAM";
   src?: string;
   stream?: MediaStream;
   width: number;
@@ -8,7 +9,7 @@ interface VideoProps {
   controls?: boolean;
 }
 
-export default function Video({ src, stream, width, height, controls = false }: VideoProps) {
+export default function Video({ type, src, stream, width, height, controls = false }: VideoProps) {
   const ref = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -16,7 +17,7 @@ export default function Video({ src, stream, width, height, controls = false }: 
   }, [src]);
 
   useEffect(() => {
-    if (stream && ref.current) {
+    if (type === "STREAM" && stream && ref.current) {
       ref.current.srcObject = stream;
       ref.current.play();
     }
@@ -24,7 +25,7 @@ export default function Video({ src, stream, width, height, controls = false }: 
 
   return (
     <video ref={ref} width={width} height={height} controls={controls}>
-      {src && <source src={src} />}
+      {type === "RECORDED" && src && <source src={src} />}
     </video>
   );
 }
