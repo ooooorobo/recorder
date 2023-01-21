@@ -1,41 +1,36 @@
-import RecorderUtil from "../util/recorder";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { Button } from "@mui/material";
+import useMediaRecorder from "../hooks/useMediaRecorder";
 
 export default function Recorder() {
-  const startRecordRef = useRef<() => void | undefined>();
-  const stopRecordRef = useRef<() => void | undefined>();
-
   const videoRef = useRef<HTMLVideoElement>(null);
   const realtimeRef = useRef<HTMLVideoElement>(null);
 
-  const [videoSrc, setVideoSrc] = useState<string>("");
+  const {mediaStream, recordedBlob, startRecord, stopRecord} = useMediaRecorder(true);
 
-  const onStopRecord = (url: string) => {
-    setVideoSrc(url);
+  const onStopRecord = () => {
+    stopRecord();
     videoRef.current?.load();
-    videoRef.current?.play();
   };
 
   useEffect(() => {
-    (async () => {
-      const { startRecord, stopRecord, mediaStream } = await RecorderUtil.createMediaRecorder(onStopRecord);
-      startRecordRef.current = startRecord;
-      stopRecordRef.current = stopRecord;
-      if (realtimeRef.current) {
-        realtimeRef.current.srcObject = mediaStream;
-        realtimeRef.current.play();
-      }
-    })();
-  }, []);
+    if (mediaStream && realtimeRef.current) {
+      realtimeRef.current.srcObject = mediaStream;
+      realtimeRef.current.play();
+    }
+  }, [mediaStream]);
+
+  useEffect(() => {
+      videoRef.current?.load();
+  }, [recordedBlob])
 
   return (
     <div>
-      <Button onClick={() => startRecordRef.current?.()}>stop recording</Button>
-      <Button onClick={() => stopRecordRef.current?.()}>stop recording</Button>
+      <Button onClick={startRecord}>start recording</Button>
+      <Button onClick={onStopRecord}>stop recording</Button>
       <video ref={realtimeRef} width="260" height="150" />
       <video ref={videoRef} width="260" height="150" controls>
-        <source src={videoSrc} />
+        <source src={recordedBlob} />
       </video>
     </div>
   );
