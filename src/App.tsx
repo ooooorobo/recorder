@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button } from "@mui/material";
 import ScreenTestStep from "./components/feature/test/ScreenTestStep";
 import RecordStep from "./components/feature/record/RecordStep";
